@@ -1,0 +1,38 @@
+<div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modal-title">Termék neve</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="d-flex">
+            <!-- Bal oldali oszlop: Kép -->
+            <div style="flex: 1; max-width: 150px; margin-right: 20px;">
+              <img id="modal-image" class="img-fluid" alt="Termék">
+            </div>
+            <!-- Jobb oldali oszlop: Szövegek -->
+            <div style="flex: 2;">
+              <h6>Részletes leírás:</h6>
+              <p id="modal-description"></p>
+              <div id="modal-info">
+                <h6>Ízek:</h6>
+                <ul id="modal-flavors"></ul>
+                <div id="dessert-flavors-section" style="display: none;">  <!-- Alapértelmezetten elrejtve -->
+                  <h6>Power Whey desszert verzió ízek:</h6>
+                  <ul id="modal-dessert-flavors"></ul>
+                </div>
+                <h6>Kiszerelés:</h6>
+                <ul id="modal-packaging"></ul>
+                <h6>Adagoláss:</h6>
+                <p id="modal-dosage"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Bezárás</button>
+        </div>
+      </div>
+    </div>
+  </div>
