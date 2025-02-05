@@ -30,13 +30,13 @@ function loadProducts() {
           if (allProductsContainer) renderProducts(products);
 
           // Szűrő eseményfigyelő
-          if (typeFilter) {
+          if (typeFilter && allProductsContainer) {
               typeFilter.addEventListener('change', function () {
                   const selectedType = this.value;
                   const filteredProducts = selectedType === 'all' 
                       ? products 
                       : products.filter(product => product.type === selectedType);
-                  if (allProductsContainer) renderProducts(filteredProducts);
+                  renderProducts(filteredProducts);
               });
           }
       })
