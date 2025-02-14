@@ -1,16 +1,112 @@
 document.addEventListener('DOMContentLoaded', function () {
-  // Betöltjük a tartalmakat (footer, info, modal) minden oldalon
+  // 1. Meglévő funkcionalitások
   loadInfoSection();
   loadModal();
   loadFooter();
+  loadAnnouncement();
 
-  // Csak akkor töltjük be a termékeket, ha a szükséges elemek léteznek
+  // 2. Termékek betöltése
   const featuredContainer = document.getElementById('featured-products');
   const allProductsContainer = document.getElementById('all-products');
   if (featuredContainer || allProductsContainer) {
-      loadProducts();
+    loadProducts();
+  }
+
+  const headerBottom = document.querySelector('.header_bottom');
+
+  if (headerBottom) {
+    const headerTop = document.querySelector('.header_top');
+    const headerBottomHeight = headerBottom.offsetHeight;
+    let lastScroll = window.scrollY;
+    
+    document.documentElement.style.setProperty('--header-bottom-height', `${headerBottomHeight}px`);
+  
+    window.addEventListener('scroll', () => {
+      const currentScroll = window.scrollY;
+      const headerBottomTop = headerBottom.getBoundingClientRect().top;
+  
+      // TÖRÖLVE: contentSection margó beállítás
+      if (currentScroll > lastScroll && headerBottomTop <= 0) {
+        headerBottom.classList.add('fixed-header');
+        document.body.style.paddingTop = `${headerBottomHeight}px`;
+      }
+  
+      if (currentScroll < lastScroll) {
+        if (currentScroll <= headerTop?.offsetHeight) {
+          headerBottom.classList.remove('fixed-header');
+          document.body.style.paddingTop = '100';
+        }
+      }
+  
+      lastScroll = currentScroll;
+    });
   }
 });
+
+// 3. Új függvény az announcement kezelésére
+async function loadAnnouncement() {
+  try {
+    // Betöltjük az announcement HTML-t
+    const response = await fetch('announcement.html');
+    if (!response.ok) throw new Error('Hálózati hiba: ' + response.status);
+    const data = await response.text();
+    
+    // Beinjektáljuk a header_top részbe
+    const headerTop = document.querySelector('.header_top');
+    if (headerTop) {
+      headerTop.insertAdjacentHTML('afterbegin', data);
+      initializeAnnouncement(); // Inicializáljuk a funkcionalitást
+    }
+  } catch (error) {
+    console.error('Hiba az announcement betöltésekor:', error);
+  }
+}
+
+// 4. Announcement funkcionalitás
+function initializeAnnouncement() {
+  const announcements = document.querySelectorAll('.announcement');
+  const prevArrow = document.querySelector('.prev-arrow');
+  const nextArrow = document.querySelector('.next-arrow');
+  if (!announcements.length || !prevArrow || !nextArrow) return;
+
+  let currentIndex = 0;
+  let interval;
+
+  function showAnnouncement(index) {
+    announcements.forEach(ann => ann.classList.remove('active'));
+    announcements[index].classList.add('active');
+  }
+
+  function nextSlide() {
+    currentIndex = (currentIndex + 1) % announcements.length;
+    showAnnouncement(currentIndex);
+  }
+
+  function prevSlide() {
+    currentIndex = (currentIndex - 1 + announcements.length) % announcements.length;
+    showAnnouncement(currentIndex);
+  }
+
+  function startInterval() {
+    interval = setInterval(nextSlide, 5000);
+  }
+
+  nextArrow.addEventListener('click', () => {
+    clearInterval(interval);
+    nextSlide();
+    startInterval();
+  });
+
+  prevArrow.addEventListener('click', () => {
+    clearInterval(interval);
+    prevSlide();
+    startInterval();
+  });
+
+  startInterval();
+}
+
+// ... (a többi meglévő függvény változatlan marad)
 
 // Termékek betöltésének külön függvénye
 function loadProducts() {
@@ -210,3 +306,4 @@ async function loadModal() {
     console.error('Hiba a modal betöltésekor:', error);
   }
 }
+
